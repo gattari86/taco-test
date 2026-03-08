@@ -3,517 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Top 5 Tacos in Katy, TX</title>
+<title>Sugar & Co. -- Artisan Candy Boutique</title>
 <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,700;0,900;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
-  @property --gradient-angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
+  @property --btn-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
 
+  :root {
+    --cream: #FAF6F1;
+    --charcoal: #1a1a1a;
+    --rosegold: #C4956A;
+    --blush: #F2D5D0;
+    --warm-brown: #8B6D5C;
+    --soft-pink: #E8C4C4;
+    --deep: #2C1810;
+  }
+
   body {
-    font-family: 'Inter', sans-serif;
-    background: #1a1a1a;
-    color: #f5f5f5;
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
     overflow-x: hidden;
     cursor: none;
+    font-weight: 300;
   }
 
-  /* ========== FILM GRAIN OVERLAY ========== */
+  /* ========== FILM GRAIN (subtle on light bg) ========== */
   body::after {
     content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    pointer-events: none;
-    opacity: 0.035;
+    position: fixed; inset: 0; z-index: 9998;
+    pointer-events: none; opacity: 0.018;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
+    background-repeat: repeat; background-size: 256px 256px;
   }
 
-  /* ========== SCROLL PROGRESS BAR ========== */
-  .scroll-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #e74c3c, #f0c040);
-    z-index: 9999;
-    width: 0%;
-    transition: width 0.1s linear;
+  /* ========== SCROLL PROGRESS (side rail, not top bar) ========== */
+  .scroll-rail {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 80px; background: rgba(196, 149, 106, 0.15);
+    border-radius: 2px; z-index: 9999;
   }
-  @media (max-width: 768px) {
-    .scroll-progress { height: 4px; }
+  .scroll-rail-fill {
+    width: 100%; background: var(--rosegold);
+    border-radius: 2px; transition: height 0.15s linear;
+    height: 0%;
   }
 
-  /* ========== CUSTOM CURSOR ========== */
+  /* ========== CUSTOM CURSOR (rose gold) ========== */
   .cursor-dot {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: #f0c040;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
+    position: fixed; width: 6px; height: 6px;
+    background: var(--rosegold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
     transition: transform 0.1s ease;
-    mix-blend-mode: difference;
   }
   .cursor-ring {
-    position: fixed;
-    width: 36px;
-    height: 36px;
-    border: 1.5px solid rgba(240, 192, 64, 0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
-    mix-blend-mode: difference;
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid rgba(196, 149, 106, 0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
   }
   .cursor-ring.hovering {
-    width: 56px;
-    height: 56px;
-    border-color: #e74c3c;
+    width: 60px; height: 60px;
+    border-color: var(--rosegold);
+    background: rgba(196, 149, 106, 0.05);
   }
 
-  /* ========== HERO ========== */
+  /* ========== HERO (photo-driven, editorial) ========== */
   .hero {
-    position: relative;
-    height: 100vh;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-    background: #0a0a0a;
+    position: relative; height: 100vh; min-height: 650px;
+    display: flex; align-items: flex-end;
+    overflow: hidden; background: var(--deep);
   }
-  #vanta-hero { position: absolute; inset: 0; z-index: 0; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://images.pexels.com/photos/4016507/pexels-photo-4016507.jpeg?auto=compress&cs=tinysrgb&w=1920');
+    background-size: cover; background-position: center 30%;
+    filter: brightness(0.45) saturate(1.2);
+  }
+  #vanta-hero {
+    position: absolute; inset: 0; z-index: 1;
+    mix-blend-mode: screen; opacity: 0.4;
+  }
   .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 800px;
-    padding: 3rem 3.5rem;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    position: relative; z-index: 2;
+    padding: 0 6vw 8vh;
+    max-width: 900px;
   }
-  .hero-badge {
-    display: inline-block;
-    background: #e74c3c;
-    color: white;
-    padding: 6px 20px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    animation: fadeInDown 1s ease 0.3s both;
+  .hero-eyebrow {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 6px; text-transform: uppercase;
+    color: var(--rosegold); margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease 0.2s both;
   }
   .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 900;
-    line-height: 1.05;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #fff 0%, #f0c040 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: fadeInUp 1s ease 0.5s both;
-    min-height: 1.2em;
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--cream); margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease 0.4s both;
+    min-height: 1.1em;
   }
   .typed-cursor {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 900;
-    background: linear-gradient(135deg, #fff 0%, #f0c040 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: fadeInUp 1s ease 0.5s both;
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900; color: var(--rosegold);
+    animation: blink 1s step-end infinite;
   }
-  .hero p {
-    font-size: 1.25rem;
-    color: rgba(255,255,255,0.8);
-    max-width: 550px;
-    margin: 0 auto 0;
-    animation: fadeInUp 1s ease 0.7s both;
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero-sub {
+    font-size: 1.15rem; color: rgba(250, 246, 241, 0.6);
+    max-width: 420px; line-height: 1.7; font-weight: 300;
+    animation: fadeInUp 1s ease 0.6s both;
   }
+  .hero-line {
+    width: 60px; height: 1px; background: var(--rosegold);
+    margin: 2rem 0; animation: fadeInUp 1s ease 0.8s both;
+  }
+
+  /* Scroll hint -- pure CSS chevron */
   .scroll-hint {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: absolute; bottom: 30px; left: 50%;
+    transform: translateX(-50%); z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
   }
   .scroll-hint span {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 0.65rem; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(250,246,241,0.35);
+    font-weight: 400;
   }
-  .scroll-hint dotlottie-player { width: 50px; height: 50px; }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+  .scroll-chevron {
+    width: 20px; height: 20px;
+    border-right: 1px solid var(--rosegold);
+    border-bottom: 1px solid var(--rosegold);
+    transform: rotate(45deg);
+    animation: chevronBounce 2s ease-in-out infinite;
   }
-  @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ========== MARQUEE ========== */
-  .marquee {
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 1rem 0;
-    background: linear-gradient(90deg, #e74c3c, #c0392b);
-    position: relative;
-    z-index: 1;
-  }
-  .marquee-inner {
-    display: inline-block;
-    animation: marqueeScroll 20s linear infinite;
-  }
-  .marquee-inner span {
-    display: inline-block;
-    padding: 0 3rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-  }
-  @keyframes marqueeScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+  @keyframes chevronBounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.4; }
+    50% { transform: rotate(45deg) translateY(6px); opacity: 1; }
   }
 
-  /* ========== SECTION TRANSITIONS ========== */
-  .diagonal-slice { position: relative; z-index: 1; }
-  .diagonal-slice::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: #1a1a1a;
-    clip-path: polygon(0 100%, 100% 0, 100% 100%);
-    z-index: 3;
-  }
-  .wave-transition { position: relative; }
-  .wave-transition::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: #1a1a1a;
-    z-index: 3;
-    pointer-events: none;
-    clip-path: ellipse(55% 100% at 50% 100%);
-  }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ========== STATS ========== */
-  .stats-section {
-    position: relative;
-    padding: 5rem 2rem 6rem;
-    overflow: hidden;
+  /* ========== EDITORIAL STATEMENT ========== */
+  .editorial {
+    padding: 8rem 6vw;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+    max-width: 1200px; margin: 0 auto;
   }
-  .stats-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 50%, rgba(231, 76, 60, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 50%, rgba(240, 192, 64, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(142, 68, 173, 0.08) 0%, transparent 50%);
-    animation: meshShift 8s ease-in-out infinite alternate;
+  .editorial-text h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 3.2rem; font-weight: 700;
+    line-height: 1.15; margin-bottom: 1.5rem;
+    color: var(--charcoal);
   }
-  @keyframes meshShift {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(15deg); }
+  .editorial-text h2 em {
+    font-style: italic; color: var(--rosegold);
   }
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    z-index: 1;
+  .editorial-text p {
+    font-size: 1rem; line-height: 1.8;
+    color: rgba(26,26,26,0.55); max-width: 400px;
   }
-  .stat-item { position: relative; }
-  .stat-item h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: #f0c040;
-    display: inline-block;
+  .editorial-numbers {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2rem; margin-top: 3rem;
   }
-  .stat-item p {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+  .ed-num h3 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.5rem; font-weight: 700;
+    color: var(--rosegold);
+  }
+  .ed-num p {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 2px; color: rgba(26,26,26,0.35);
     margin-top: 4px;
   }
-  .stat-fire {
-    position: absolute;
-    top: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 60px;
-    pointer-events: none;
+  .editorial-photo {
+    border-radius: 300px 300px 20px 20px;
+    overflow: hidden; height: 550px;
+    position: relative;
   }
+  .editorial-photo img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 6s ease;
+  }
+  .editorial-photo:hover img { transform: scale(1.08); }
 
-  /* ========== VANTA DIVIDER ========== */
-  .vanta-divider { position: relative; height: 200px; overflow: hidden; }
-  #vanta-net { position: absolute; inset: 0; }
-
-  /* ========== SECTION ========== */
-  .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
-  .section-header { text-align: center; margin-bottom: 4rem; }
-  .section-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
+  /* ========== HORIZONTAL SCROLL COLLECTION ========== */
+  .collection-section { padding: 6rem 0; overflow: hidden; }
+  .collection-header {
+    text-align: center; margin-bottom: 3rem; padding: 0 2rem;
+  }
+  .collection-header h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.8rem; font-weight: 700;
     margin-bottom: 0.5rem;
   }
-  .section-header .accent-line {
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #e74c3c, #f0c040);
+  .collection-header .thin-rule {
+    width: 40px; height: 1px; background: var(--rosegold);
     margin: 1rem auto;
-    border-radius: 2px;
   }
-  .section-header p {
-    color: rgba(255,255,255,0.6);
-    font-size: 1.1rem;
+  .collection-header p {
+    color: rgba(26,26,26,0.4); font-size: 0.95rem; font-weight: 300;
   }
-
-  /* ========== TACO CARDS ========== */
-  .taco-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    margin-bottom: 3rem;
-    border-radius: 16px;
-    overflow: hidden;
-    background: #222;
-    border: 1px solid rgba(240, 192, 64, 0.08);
-    transition: box-shadow 0.3s ease, transform 0.15s ease;
+  .collection-scroll {
+    display: flex; gap: 1.5rem;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 1rem 6vw 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .taco-card:hover {
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(240, 192, 64, 0.05);
-    border-color: rgba(240, 192, 64, 0.15);
-  }
-  .taco-card:nth-child(even) { direction: rtl; }
-  .taco-card:nth-child(even) > * { direction: ltr; }
-
-  .taco-img {
-    height: 100%;
-    min-height: 320px;
-    background-size: cover;
-    background-position: center;
+  .collection-scroll::-webkit-scrollbar { display: none; }
+  .collection-card {
+    flex: 0 0 320px; scroll-snap-align: start;
+    border-radius: 16px; overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
     position: relative;
   }
-  .taco-img::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.3) 0%, rgba(240, 192, 64, 0.2) 100%);
-    mix-blend-mode: overlay;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+  .collection-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(196, 149, 106, 0.12);
   }
-  .taco-card:hover .taco-img::after { opacity: 1; }
-
-  .taco-rank {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: #e74c3c;
-    color: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
+  .collection-card-img {
+    height: 280px; background-size: cover;
+    background-position: center; position: relative;
+  }
+  .collection-card-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(255,255,255,0.9) 100%);
+  }
+  .cc-badge {
+    position: absolute; top: 16px; left: 16px; z-index: 2;
+    background: var(--rosegold); color: white;
+    padding: 5px 14px; border-radius: 4px;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .collection-card-info { padding: 1.5rem; }
+  .cc-name {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--charcoal); margin-bottom: 0.4rem;
+  }
+  .cc-desc {
+    font-size: 0.85rem; color: rgba(26,26,26,0.45);
+    line-height: 1.65; margin-bottom: 1rem;
+  }
+  .cc-bottom {
+    display: flex; justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 900;
-    box-shadow: 0 4px 15px rgba(231,76,60,0.4);
-    z-index: 1;
   }
-  .taco-card:nth-child(even) .taco-rank { left: auto; right: 16px; }
-
-  .taco-info { padding: 2.5rem; display: flex; flex-direction: column; justify-content: center; }
-  .taco-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 0.25rem; }
-  .taco-name { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: #f0c040; }
-  .taco-name-fire { width: 35px; height: 35px; flex-shrink: 0; }
-  .taco-place { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; font-weight: 500; }
-  .taco-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; }
-  .taco-rating dotlottie-player { width: 100px; height: 30px; }
-  .taco-rating span { font-size: 0.85rem; color: rgba(255,255,255,0.6); font-weight: 500; }
-  .taco-desc { color: rgba(255,255,255,0.75); line-height: 1.7; font-size: 0.95rem; }
-  .taco-tags { display: flex; gap: 8px; margin-top: 1.25rem; flex-wrap: wrap; }
-  .taco-tag {
-    background: rgba(240, 192, 64, 0.15);
-    color: #f0c040;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: background 0.3s ease;
+  .cc-price {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.2rem; font-weight: 700; color: var(--rosegold);
   }
-  .taco-tag:hover { background: rgba(240, 192, 64, 0.25); }
-  .taco-tag.hot { background: rgba(231, 76, 60, 0.2); color: #e74c3c; display: flex; align-items: center; gap: 4px; }
-  .taco-tag.hot dotlottie-player { width: 18px; height: 18px; }
+  .cc-tags { display: flex; gap: 6px; }
+  .cc-tag {
+    background: var(--cream); color: var(--warm-brown);
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 0.68rem; font-weight: 500;
+  }
 
-  /* ========== VIDEO INTERLUDE ========== */
-  .video-interlude {
-    position: relative;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* ========== QUOTE (editorial large type) ========== */
+  .big-quote {
+    padding: 7rem 6vw;
     text-align: center;
-    overflow: hidden;
-    margin: 2rem 0;
-    border-radius: 16px;
+    background: var(--deep);
+    position: relative; overflow: hidden;
   }
-  .video-interlude video {
+  #vanta-quote { position: absolute; inset: 0; z-index: 0; opacity: 0.3; }
+  .big-quote blockquote {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 500; font-style: italic;
+    color: var(--cream); max-width: 800px;
+    margin: 0 auto; line-height: 1.35;
+    position: relative; z-index: 1;
+  }
+  .big-quote cite {
+    display: block; margin-top: 2rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem; font-style: normal;
+    color: var(--rosegold); letter-spacing: 4px;
+    text-transform: uppercase; position: relative; z-index: 1;
+  }
+
+  /* ========== VIDEO SECTION (full-width parallax) ========== */
+  .video-section {
+    position: relative; height: 80vh; min-height: 500px;
+    overflow: hidden; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .video-section video {
     position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; filter: brightness(0.35) saturate(1.2);
+    object-fit: cover; filter: brightness(0.35);
   }
-  .video-interlude-content {
-    position: relative; z-index: 1; padding: 2.5rem 3rem;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08);
+  .video-section-content {
+    position: relative; z-index: 1; text-align: center;
+    max-width: 600px; padding: 2rem;
   }
-  .video-interlude h2 {
-    font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #fff 0%, #f0c040 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  .video-section-content .vs-eyebrow {
+    font-size: 0.7rem; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--rosegold);
+    margin-bottom: 1rem;
   }
-  .video-interlude p { color: rgba(255,255,255,0.7); font-size: 1.15rem; max-width: 500px; margin: 0 auto; }
-
-  /* ========== VIDEO GALLERY ========== */
-  .video-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 3rem 0; }
-  .video-gallery-item { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; }
-  .video-gallery-item video {
-    width: 100%; height: 100%; object-fit: cover; filter: saturate(1.1);
-    transition: transform 0.5s ease, filter 0.5s ease;
+  .video-section-content h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700; color: var(--cream);
+    line-height: 1.05; margin-bottom: 1rem;
   }
-  .video-gallery-item:hover video { transform: scale(1.05); filter: saturate(1.3) brightness(1.1); }
-  .video-gallery-item .overlay {
-    position: absolute; bottom: 0; left: 0; right: 0; padding: 1.25rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    font-size: 0.85rem; color: rgba(255,255,255,0.8); font-weight: 500;
+  .video-section-content p {
+    color: rgba(250,246,241,0.5); font-size: 1rem;
+    line-height: 1.7; font-weight: 300;
   }
 
-  /* ========== CTA ========== */
+  /* ========== PROCESS (side-by-side video grid) ========== */
+  .process-section {
+    padding: 6rem 6vw; max-width: 1200px; margin: 0 auto;
+  }
+  .process-header {
+    margin-bottom: 3rem;
+  }
+  .process-header h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.5rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .process-header p {
+    color: rgba(26,26,26,0.4); font-size: 0.95rem;
+  }
+  .process-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .process-item {
+    position: relative; border-radius: 12px;
+    overflow: hidden; aspect-ratio: 4/3;
+    background: var(--charcoal);
+  }
+  .process-item video {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.7) saturate(1.1);
+    transition: filter 0.5s ease, transform 0.5s ease;
+  }
+  .process-item:hover video {
+    filter: brightness(0.85) saturate(1.2);
+    transform: scale(1.03);
+  }
+  .process-item .p-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  }
+  .process-item .p-num {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--rosegold); line-height: 1;
+  }
+  .process-item .p-text {
+    font-size: 0.85rem; color: rgba(250,246,241,0.7);
+    margin-top: 4px; font-weight: 400;
+  }
+
+  /* ========== CTA (clean editorial, no 3D bg) ========== */
   .cta-section {
-    position: relative; margin: 3rem 0; border-radius: 16px; overflow: hidden;
-    min-height: 350px; display: flex; align-items: center; justify-content: center;
+    padding: 8rem 6vw;
+    background: linear-gradient(135deg, var(--blush) 0%, var(--soft-pink) 50%, var(--cream) 100%);
+    text-align: center; position: relative; overflow: hidden;
   }
-  #vanta-cta { position: absolute; inset: 0; z-index: 0; }
-  .cta-content {
-    position: relative; z-index: 1; text-align: center; padding: 3rem 2rem;
-    background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.06);
-    max-width: 600px; margin: 2rem;
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,149,106,0.08), transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(139,109,92,0.06), transparent 60%);
   }
-  .cta-content h2 { font-family: 'Playfair Display', serif; font-size: 2.25rem; margin-bottom: 0.75rem; color: #f0c040; }
-  .cta-content p { color: rgba(255,255,255,0.65); font-size: 1rem; margin-bottom: 2rem; max-width: 450px; margin-left: auto; margin-right: auto; }
-  .cta-lottie-row { display: flex; justify-content: center; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem; }
-
-  /* Magnetic button */
-  .cta-button {
-    display: inline-block;
-    padding: 16px 44px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 1px;
-    color: white;
-    background: linear-gradient(var(--gradient-angle), #e74c3c, #f0c040, #e74c3c);
-    background-size: 200% 200%;
-    animation: gradientSpin 3s linear infinite;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+  .cta-inner { position: relative; z-index: 1; max-width: 550px; margin: 0 auto; }
+  .cta-section h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700; color: var(--deep);
+    line-height: 1.15; margin-bottom: 1rem;
   }
-  @keyframes gradientSpin {
-    0% { --gradient-angle: 0deg; }
-    100% { --gradient-angle: 360deg; }
+  .cta-section p {
+    color: rgba(44,24,16,0.5); font-size: 1rem;
+    line-height: 1.7; margin-bottom: 2.5rem; font-weight: 300;
   }
-  .cta-button:hover {
-    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.5);
+  .cta-btn {
+    display: inline-block; padding: 18px 52px;
+    background: var(--deep); color: var(--cream);
+    text-decoration: none; font-size: 0.8rem;
+    font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; border-radius: 0;
+    transition: background 0.4s ease, letter-spacing 0.4s ease;
+    position: relative; overflow: hidden;
+  }
+  .cta-btn::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--rosegold);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s ease;
+  }
+  .cta-btn:hover {
+    background: var(--charcoal);
+    letter-spacing: 5px;
+  }
+  .cta-btn:hover::after {
+    transform: scaleX(1); transform-origin: left;
   }
 
   /* ========== FOOTER ========== */
   footer {
-    text-align: center; padding: 3rem 2rem; color: rgba(255,255,255,0.3);
-    font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);
-    max-width: 1100px; margin: 0 auto;
+    padding: 4rem 6vw 3rem;
+    border-top: 1px solid rgba(26,26,26,0.06);
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between;
+    align-items: flex-end; flex-wrap: wrap; gap: 2rem;
   }
-  footer .heart { color: #e74c3c; }
-  .powered-by { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
-  .powered-by span {
-    color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 4px 14px;
-    border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; background: rgba(255,255,255,0.02);
+  .footer-left {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--charcoal);
+  }
+  .footer-left small {
+    display: block; font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem; font-weight: 300;
+    color: rgba(26,26,26,0.3); margin-top: 6px;
+  }
+  .footer-right {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .footer-right span {
+    font-size: 0.65rem; font-weight: 400;
+    color: rgba(26,26,26,0.25); padding: 4px 12px;
+    border: 1px solid rgba(26,26,26,0.06); border-radius: 3px;
+    letter-spacing: 1px; text-transform: uppercase;
   }
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 768px) {
     body { cursor: auto; }
     .cursor-dot, .cursor-ring { display: none; }
-    .hero-content { padding: 2rem 1.5rem; margin: 0 1rem; }
-    .taco-card { grid-template-columns: 1fr; }
-    .taco-card:nth-child(even) { direction: ltr; }
-    .taco-img { min-height: 250px; }
-    .taco-info { padding: 1.5rem; }
-    .video-interlude { height: 350px; }
-    .video-interlude h2 { font-size: 2rem; }
-    .video-interlude-content { padding: 1.5rem 2rem; }
-    .stats-bar { grid-template-columns: 1fr; gap: 1.5rem; }
-    .video-gallery { grid-template-columns: 1fr; }
-    .marquee { padding: 1.25rem 0; }
-    .marquee-inner span { font-size: 0.9rem; padding: 0 2rem; }
-    .cta-content h2 { font-size: 1.75rem; }
-    .vanta-divider { height: 120px; }
-    .diagonal-slice::before, .wave-transition::before { height: 40px; top: -40px; }
+    .scroll-rail { right: 10px; }
+    .hero-content { padding: 0 1.5rem 6vh; }
+    .hero h1 { font-size: clamp(3rem, 12vw, 5rem); }
+    .editorial {
+      grid-template-columns: 1fr; padding: 4rem 1.5rem;
+      gap: 2.5rem;
+    }
+    .editorial-photo {
+      height: 400px;
+      border-radius: 200px 200px 16px 16px;
+      order: -1;
+    }
+    .editorial-numbers { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .ed-num h3 { font-size: 1.8rem; }
+    .collection-card { flex: 0 0 280px; }
+    .collection-card-img { height: 220px; }
+    .process-grid { grid-template-columns: 1fr; }
+    .video-section { height: 60vh; min-height: 400px; }
+    .video-section-content h2 { font-size: 2.2rem; }
+    .cta-section { padding: 5rem 1.5rem; }
+    .big-quote { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; align-items: center; text-align: center; }
   }
 </style>
 </head>
 <body>
 
-<!-- Scroll progress bar -->
-<div class="scroll-progress" id="scrollProgress"></div>
+<!-- Scroll rail (side, not top) -->
+<div class="scroll-rail"><div class="scroll-rail-fill" id="scrollFill"></div></div>
 
 <!-- Custom cursor -->
 <div class="cursor-dot" id="cursorDot"></div>
@@ -521,321 +488,265 @@
 
 <!-- ========== HERO ========== -->
 <section class="hero">
+  <div class="hero-bg"></div>
   <div id="vanta-hero"></div>
   <div class="hero-content">
-    <div class="hero-badge">Totally Unofficial</div>
+    <div class="hero-eyebrow" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">Artisan Confections -- Est. 2024</div>
     <h1><span id="typed-output"></span></h1>
-    <p>A completely biased, non-scientific ranking of the tacos that make this city worth living in.</p>
+    <div class="hero-line" data-aos="fade-up" data-aos-duration="800" data-aos-delay="800"></div>
+    <p class="hero-sub" data-aos="fade-up" data-aos-duration="800" data-aos-delay="600">Handcrafted sweets for the incurably nostalgic. Small batch. No shortcuts. Made right here.</p>
   </div>
   <div class="scroll-hint">
     <span>Scroll</span>
-    <dotlottie-player src="https://assets-v2.lottiefiles.com/a/fde994d0-1152-11ee-b091-8fed128708b3/jHD8qVySPh.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>
+    <div class="scroll-chevron"></div>
   </div>
 </section>
 
-<!-- Marquee -->
-<div class="marquee">
-  <div class="marquee-inner">
-    <span>Al Pastor</span><span>&#x2022;</span>
-    <span>Birria</span><span>&#x2022;</span>
-    <span>Suadero</span><span>&#x2022;</span>
-    <span>Carnitas</span><span>&#x2022;</span>
-    <span>Camaron</span><span>&#x2022;</span>
-    <span>Salsa Verde</span><span>&#x2022;</span>
-    <span>Habanero</span><span>&#x2022;</span>
-    <span>Trompo</span><span>&#x2022;</span>
-    <span>Consomme</span><span>&#x2022;</span>
-    <span>Handmade Tortilla</span><span>&#x2022;</span>
-    <!-- Duplicate for seamless loop -->
-    <span>Al Pastor</span><span>&#x2022;</span>
-    <span>Birria</span><span>&#x2022;</span>
-    <span>Suadero</span><span>&#x2022;</span>
-    <span>Carnitas</span><span>&#x2022;</span>
-    <span>Camaron</span><span>&#x2022;</span>
-    <span>Salsa Verde</span><span>&#x2022;</span>
-    <span>Habanero</span><span>&#x2022;</span>
-    <span>Trompo</span><span>&#x2022;</span>
-    <span>Consomme</span><span>&#x2022;</span>
-    <span>Handmade Tortilla</span><span>&#x2022;</span>
+<!-- ========== EDITORIAL STATEMENT + STATS ========== -->
+<div class="editorial">
+  <div class="editorial-text" data-aos="fade-right" data-aos-duration="1000">
+    <h2>Candy made for people who <em>remember</em></h2>
+    <p>Every jar, tin, and box we ship carries a piece of a story. The butterscotch your grandmother kept in her purse. The sour worms from the corner store after school. We make those memories taste exactly how you remember.</p>
+    <div class="editorial-numbers">
+      <div class="ed-num">
+        <h3><span class="counter" data-target="1247">0</span></h3>
+        <p>Crafted</p>
+      </div>
+      <div class="ed-num">
+        <h3><span class="counter" data-target="23">0</span></h3>
+        <p>Flavors</p>
+      </div>
+      <div class="ed-num">
+        <h3><span class="counter" data-target="100">0</span>%</h3>
+        <p>Real</p>
+      </div>
+    </div>
+  </div>
+  <div class="editorial-photo" data-aos="fade-left" data-aos-duration="1200">
+    <img src="https://images.pexels.com/photos/3776939/pexels-photo-3776939.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Artisan macarons" loading="lazy">
   </div>
 </div>
 
-<!-- ========== STATS ========== -->
-<div class="stats-section diagonal-slice" data-aos="fade-up" data-aos-duration="800">
-  <div class="stats-bar">
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-      <dotlottie-player class="stat-fire" src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="47">0</span></h3>
-      <p>Tacos Consumed</p>
-    </div>
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="250">
-      <dotlottie-player class="stat-fire" src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="0.8" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="12">0</span></h3>
-      <p>Spots Visited</p>
-    </div>
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="400">
-      <dotlottie-player class="stat-fire" src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="1.2" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="5">0</span></h3>
-      <p>Survived the Cut</p>
-    </div>
-  </div>
-</div>
-
-<!-- Vanta Net divider -->
-<div class="vanta-divider"><div id="vanta-net"></div></div>
-
-<!-- ========== RANKINGS ========== -->
-<div class="section wave-transition">
-  <div class="section-header" data-aos="fade-down" data-aos-duration="600">
-    <h2>The Rankings</h2>
-    <div class="accent-line"></div>
-    <p>Judged on tortilla, meat, salsa, and overall soul.</p>
+<!-- ========== THE COLLECTION (horizontal scroll) ========== -->
+<div class="collection-section">
+  <div class="collection-header" data-aos="fade-up" data-aos-duration="800">
+    <h2>The Collection</h2>
+    <div class="thin-rule"></div>
+    <p>Swipe to explore what's in season.</p>
   </div>
 
-  <!-- #1 -->
-  <div class="taco-card" data-tilt data-aos="fade-right" data-aos-duration="700">
-    <div class="taco-img" style="background-image: url('https://images.pexels.com/photos/25391589/pexels-photo-25391589.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-      <div class="taco-rank">1</div>
-    </div>
-    <div class="taco-info">
-      <div class="taco-name-row">
-        <div class="taco-name">Al Pastor de la Calle</div>
-        <dotlottie-player class="taco-name-fire" src="https://assets-v2.lottiefiles.com/a/890cb942-1177-11ee-847c-73f9b2630e61/d8bX16JbYI.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>
+  <div class="collection-scroll">
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="0">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/1193742/pexels-photo-1193742.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">Bestseller</span>
       </div>
-      <div class="taco-place">The imaginary trompo on Mason Rd</div>
-      <div class="taco-rating">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" autoplay></dotlottie-player>
-        <span>4.9 / 5.0</span>
-      </div>
-      <div class="taco-desc">Pineapple caramelized to perfection, shaved off a rotating trompo that's been spinning since dawn. The corn tortilla is doubled and the salsa verde has just enough heat to remind you you're alive.</div>
-      <div class="taco-tags">
-        <span class="taco-tag">Al Pastor</span>
-        <span class="taco-tag">Trompo</span>
-        <span class="taco-tag hot"><dotlottie-player src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>Fuego</span>
+      <div class="collection-card-info">
+        <div class="cc-name">Rainbow Drops</div>
+        <div class="cc-desc">Hand-pulled hard candy. Shatter-crack texture, fruit-forward finish. Every color of the spectrum.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$14</span>
+          <div class="cc-tags"><span class="cc-tag">Fruit</span><span class="cc-tag">Classic</span></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- #2 -->
-  <div class="taco-card" data-tilt data-aos="fade-left" data-aos-duration="700">
-    <div class="taco-img" style="background-image: url('https://images.pexels.com/photos/5201109/pexels-photo-5201109.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-      <div class="taco-rank">2</div>
-    </div>
-    <div class="taco-info">
-      <div class="taco-name-row"><div class="taco-name">Birria Dorada</div></div>
-      <div class="taco-place">A fictional truck on Cinco Ranch Blvd</div>
-      <div class="taco-rating">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" autoplay></dotlottie-player>
-        <span>4.8 / 5.0</span>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="80">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/14275553/pexels-photo-14275553.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">New</span>
       </div>
-      <div class="taco-desc">Slow-braised beef dipped in consomme, crisped on the plancha until the edges shatter. Comes with a cup of the braising liquid for dipping. You will get messy. You will not care.</div>
-      <div class="taco-tags"><span class="taco-tag">Birria</span><span class="taco-tag">Crispy</span><span class="taco-tag">Consomme</span></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Velvet Truffles</div>
+        <div class="cc-desc">Dark chocolate ganache rolled in cocoa and edible gold. Melts before it hits the back of your tongue.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$22</span>
+          <div class="cc-tags"><span class="cc-tag">Chocolate</span></div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- #3 -->
-  <div class="taco-card" data-tilt data-aos="fade-right" data-aos-duration="700">
-    <div class="taco-img" style="background-image: url('https://images.pexels.com/photos/8448068/pexels-photo-8448068.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-      <div class="taco-rank">3</div>
-    </div>
-    <div class="taco-info">
-      <div class="taco-name-row"><div class="taco-name">Suadero con Todo</div></div>
-      <div class="taco-place">A dream stand near Katy Mills</div>
-      <div class="taco-rating">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" autoplay></dotlottie-player>
-        <span>4.7 / 5.0</span>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="160">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/5469039/pexels-photo-5469039.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Sour Worms</div>
+        <div class="cc-desc">Dual-coated gummy worms with a citric acid bite that makes your face do the thing.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$9</span>
+          <div class="cc-tags"><span class="cc-tag">Sour</span><span class="cc-tag">Gummy</span></div>
+        </div>
       </div>
-      <div class="taco-desc">The cut nobody talks about but everyone should. Thin-sliced brisket-adjacent beef, cooked low and slow on the flat top. Topped with raw onion, cilantro, and a squeeze of lime that ties everything together.</div>
-      <div class="taco-tags"><span class="taco-tag">Suadero</span><span class="taco-tag">Street Style</span><span class="taco-tag">Underrated</span></div>
     </div>
-  </div>
 
-  <!-- Margarita interlude -->
-  <div class="video-interlude" data-aos="flip-up" data-aos-duration="900">
-    <video autoplay muted loop playsinline>
-      <source src="https://videos.pexels.com/video-files/4765778/4765778-hd_1280_720_25fps.mp4" type="video/mp4">
-    </video>
-    <div class="video-interlude-content">
-      <h2>Pair with a Margarita</h2>
-      <p>Because tacos without a drink is just a snack.</p>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="240">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/718759/pexels-photo-718759.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Salt & Honey Caramels</div>
+        <div class="cc-desc">Slow-cooked caramel with Maldon sea salt and raw wildflower honey. Chewy. Dangerous.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$18</span>
+          <div class="cc-tags"><span class="cc-tag">Caramel</span></div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- #4 -->
-  <div class="taco-card" data-tilt data-aos="fade-left" data-aos-duration="700">
-    <div class="taco-img" style="background-image: url('https://images.pexels.com/photos/8448178/pexels-photo-8448178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-      <div class="taco-rank">4</div>
-    </div>
-    <div class="taco-info">
-      <div class="taco-name-row"><div class="taco-name">Carnitas Michoacanas</div></div>
-      <div class="taco-place">Somewhere on FM 1463 (we wish)</div>
-      <div class="taco-rating">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" autoplay></dotlottie-player>
-        <span>4.6 / 5.0</span>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="320">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/7379704/pexels-photo-7379704.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">Limited</span>
       </div>
-      <div class="taco-desc">Pork braised in its own fat until it falls apart with a look. Served on a handmade tortilla with pickled red onion and habanero salsa. The kind of taco that makes you close your eyes when you bite.</div>
-      <div class="taco-tags">
-        <span class="taco-tag">Carnitas</span>
-        <span class="taco-tag">Handmade Tortilla</span>
-        <span class="taco-tag hot"><dotlottie-player src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>Habanero</span>
+      <div class="collection-card-info">
+        <div class="cc-name">Cloud Puffs</div>
+        <div class="cc-desc">Pastel meringue kisses that dissolve on contact. Lavender, rose, and vanilla bean.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$12</span>
+          <div class="cc-tags"><span class="cc-tag">Meringue</span></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- #5 -->
-  <div class="taco-card" data-tilt data-aos="fade-right" data-aos-duration="700">
-    <div class="taco-img" style="background-image: url('https://images.pexels.com/photos/8448333/pexels-photo-8448333.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-      <div class="taco-rank">5</div>
-    </div>
-    <div class="taco-info">
-      <div class="taco-name-row">
-        <div class="taco-name">Camaron a la Diabla</div>
-        <dotlottie-player class="taco-name-fire" src="https://assets-v2.lottiefiles.com/a/890cb942-1177-11ee-847c-73f9b2630e61/d8bX16JbYI.lottie" background="transparent" speed="1.3" loop autoplay></dotlottie-player>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="400">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/4015264/pexels-photo-4015264.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Midnight Bark</div>
+        <div class="cc-desc">72% cacao dark chocolate studded with pistachios, dried cranberries, and a whisper of espresso.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$16</span>
+          <div class="cc-tags"><span class="cc-tag">Dark</span></div>
+        </div>
       </div>
-      <div class="taco-place">The seafood spot that doesn't exist yet</div>
-      <div class="taco-rating">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" autoplay></dotlottie-player>
-        <span>4.5 / 5.0</span>
-      </div>
-      <div class="taco-desc">Gulf shrimp sauteed in a chile de arbol sauce that builds heat with every bite. Finished with a squeeze of lime, shredded cabbage, and a drizzle of crema. This one fights back.</div>
-      <div class="taco-tags">
-        <span class="taco-tag">Shrimp</span>
-        <span class="taco-tag">Gulf Coast</span>
-        <span class="taco-tag hot"><dotlottie-player src="https://assets-v2.lottiefiles.com/a/9283245a-1174-11ee-9d88-8b23459bc101/ODB2bUwQpV.lottie" background="transparent" speed="1.5" loop autoplay></dotlottie-player>a la Diabla</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Video Gallery -->
-  <div class="section-header" style="margin-top: 4rem;" data-aos="fade-down" data-aos-duration="600">
-    <h2>Behind the Plancha</h2>
-    <div class="accent-line"></div>
-    <p>The real magic happens before the taco hits your hand.</p>
-  </div>
-
-  <div class="video-gallery">
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="0" data-aos-duration="600">
-      <video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/8448182/8448182-hd_1920_1080_24fps.mp4" type="video/mp4"></video>
-      <div class="overlay">The prep work</div>
-    </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="150" data-aos-duration="600">
-      <video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/5210785/5210785-hd_1280_720_30fps.mp4" type="video/mp4"></video>
-      <div class="overlay">Fire and smoke</div>
-    </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="300" data-aos-duration="600">
-      <video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/7603355/7603355-hd_1280_720_24fps.mp4" type="video/mp4"></video>
-      <div class="overlay">The perfect pour</div>
-    </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="450" data-aos-duration="600">
-      <video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/5230366/5230366-hd_1920_1080_25fps.mp4" type="video/mp4"></video>
-      <div class="overlay">Cheers to that</div>
-    </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="cta-section" data-aos="fade-up" data-aos-duration="800">
-    <div id="vanta-cta"></div>
-    <div class="cta-content">
-      <div class="cta-lottie-row">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/890cb942-1177-11ee-847c-73f9b2630e61/d8bX16JbYI.lottie" background="transparent" speed="0.8" loop autoplay style="width:50px;height:50px;"></dotlottie-player>
-        <h2>Still Hungry?</h2>
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/890cb942-1177-11ee-847c-73f9b2630e61/d8bX16JbYI.lottie" background="transparent" speed="0.8" loop autoplay style="width:50px;height:50px;"></dotlottie-player>
-      </div>
-      <p>Subscribe to get notified when we drop the Top 5 Barbacoa list. It's going to be violent.</p>
-      <a href="#" class="cta-button" id="magneticBtn">Notify Me</a>
     </div>
   </div>
 </div>
 
-<footer data-aos="fade-up" data-aos-duration="400">
-  Made with <span class="heart">&hearts;</span> using zero paid tools<br>
-  This is a test page. These restaurants are fictional. The cravings are real.
-  <div class="powered-by">
-    <span>Pexels</span>
-    <span>LottieFiles</span>
-    <span>Vanta.js</span>
-    <span>AOS</span>
-    <span>Typed.js</span>
-    <span>Google Fonts</span>
-    <span>CSS</span>
+<!-- ========== QUOTE (dark section with Vanta BIRDS) ========== -->
+<div class="big-quote" data-aos="fade" data-aos-duration="1200">
+  <div id="vanta-quote"></div>
+  <blockquote>"Life is uncertain. Eat candy first."</blockquote>
+  <cite>Everyone, eventually</cite>
+</div>
+
+<!-- ========== VIDEO HERO (full-width cinematic) ========== -->
+<div class="video-section">
+  <video autoplay muted loop playsinline preload="metadata">
+    <source src="https://videos.pexels.com/video-files/4458586/4458586-hd_1920_1080_24fps.mp4" type="video/mp4">
+  </video>
+  <div class="video-section-content" data-aos="fade-up" data-aos-duration="1000">
+    <div class="vs-eyebrow">The Process</div>
+    <h2>Made by Hand</h2>
+    <p>Every batch is pulled, poured, and cut by hand in our studio kitchen. No shortcuts. No machines. Just craft and patience.</p>
+  </div>
+</div>
+
+<!-- ========== PROCESS GRID ========== -->
+<div class="process-section">
+  <div class="process-header" data-aos="fade-up" data-aos-duration="800">
+    <h2>Inside the Studio</h2>
+    <p>Where sugar becomes something worth savoring.</p>
+  </div>
+
+  <div class="process-grid">
+    <div class="process-item" data-aos="fade-up" data-aos-delay="0" data-aos-duration="700">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://videos.pexels.com/video-files/6950913/6950913-hd_1920_1080_25fps.mp4" type="video/mp4">
+      </video>
+      <div class="p-label"><div class="p-num">01</div><div class="p-text">Tempering chocolate</div></div>
+    </div>
+    <div class="process-item" data-aos="fade-up" data-aos-delay="150" data-aos-duration="700">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://videos.pexels.com/video-files/4458592/4458592-hd_1366_720_24fps.mp4" type="video/mp4">
+      </video>
+      <div class="p-label"><div class="p-num">02</div><div class="p-text">The pour</div></div>
+    </div>
+    <div class="process-item" data-aos="fade-up" data-aos-delay="300" data-aos-duration="700">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://videos.pexels.com/video-files/3009107/3009107-hd_1920_1080_30fps.mp4" type="video/mp4">
+      </video>
+      <div class="p-label"><div class="p-num">03</div><div class="p-text">Wrapping the goods</div></div>
+    </div>
+    <div class="process-item" data-aos="fade-up" data-aos-delay="450" data-aos-duration="700">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://videos.pexels.com/video-files/4458579/4458579-hd_1366_720_24fps.mp4" type="video/mp4">
+      </video>
+      <div class="p-label"><div class="p-num">04</div><div class="p-text">Quality check</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CTA (clean editorial, blush gradient bg) ========== -->
+<div class="cta-section">
+  <div class="cta-inner" data-aos="fade-up" data-aos-duration="1000">
+    <h2>Get the Monthly Box</h2>
+    <p>A curated selection of seasonal confections delivered to your door. First month ships free. Cancel whenever.</p>
+    <a href="#" class="cta-btn" id="magneticBtn">Subscribe Now</a>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer data-aos="fade-up" data-aos-duration="600">
+  <div class="footer-left">
+    Sugar & Co.
+    <small>Artisan confections, handcrafted with care.</small>
+  </div>
+  <div class="footer-right">
+    <span>Instagram</span>
+    <span>Contact</span>
+    <span>Wholesale</span>
   </div>
 </footer>
 
 <!-- CDN scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.16/dist/typed.umd.js"></script>
 
 <script>
-// ========== AOS ==========
-AOS.init({ once: true, easing: 'ease-out-cubic' });
+// ========== AOS (subtle fades only, editorial pace) ==========
+AOS.init({ once: true, easing: 'ease-out-quad', duration: 900 });
 
 // ========== TYPED.JS ==========
 new Typed('#typed-output', {
-  strings: [
-    'Top 5 Tacos in Katy, TX',
-    'Los Mejores Tacos de Katy',
-    'Top 5 Tacos in Katy, TX'
-  ],
-  typeSpeed: 50,
-  backSpeed: 30,
-  backDelay: 2000,
-  startDelay: 800,
-  loop: false,
-  showCursor: true,
-  cursorChar: '|'
+  strings: ['Sugar & Co.'],
+  typeSpeed: 80, startDelay: 1000,
+  showCursor: true, cursorChar: '|',
+  loop: false
 });
 
-// ========== VANTA ==========
-VANTA.FOG({
+// ========== VANTA BIRDS (hero -- light particles over photo) ==========
+VANTA.BIRDS({
   el: '#vanta-hero',
   mouseControls: true, touchControls: true,
   minHeight: 200, minWidth: 200,
-  highlightColor: 0xe74c3c,
-  midtoneColor: 0x1a0a00,
-  lowlightColor: 0x0a0a0a,
-  baseColor: 0x0a0a0a,
-  blurFactor: 0.5, speed: 1.5, zoom: 1.2
+  backgroundColor: 0x000000,
+  color1: 0xC4956A, color2: 0xF2D5D0,
+  quantity: 3, birdSize: 1.2, wingSpan: 25,
+  speedLimit: 3, separation: 60, alignment: 40, cohesion: 30
 });
 
-VANTA.NET({
-  el: '#vanta-net',
-  mouseControls: true, touchControls: true,
-  minHeight: 100, minWidth: 200,
-  color: 0xf0c040, backgroundColor: 0x1a1a1a,
-  points: 8, maxDistance: 22, spacing: 18, showDots: true
-});
-
-VANTA.WAVES({
-  el: '#vanta-cta',
+// ========== VANTA BIRDS (quote section -- different config) ==========
+VANTA.BIRDS({
+  el: '#vanta-quote',
   mouseControls: true, touchControls: true,
   minHeight: 200, minWidth: 200,
-  color: 0x1a0500, shininess: 40,
-  waveHeight: 15, waveSpeed: 0.8, zoom: 0.9
+  backgroundColor: 0x2C1810,
+  color1: 0xC4956A, color2: 0x8B6D5C,
+  quantity: 2, birdSize: 0.8, wingSpan: 20,
+  speedLimit: 2, separation: 80, alignment: 30, cohesion: 20
 });
 
-// ========== SCROLL PROGRESS BAR ==========
+// ========== SCROLL RAIL (vertical side indicator) ==========
 window.addEventListener('scroll', () => {
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const progress = (scrollTop / scrollHeight) * 100;
-  document.getElementById('scrollProgress').style.width = progress + '%';
+  const p = (document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100;
+  document.getElementById('scrollFill').style.height = p + '%';
 });
 
-// ========== CUSTOM CURSOR (desktop only) ==========
+// ========== CUSTOM CURSOR ==========
 if (window.innerWidth > 768) {
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   document.addEventListener('mousemove', (e) => {
-    dot.style.left = (e.clientX - 4) + 'px';
-    dot.style.top = (e.clientY - 4) + 'px';
-    ring.style.left = (e.clientX - 18) + 'px';
-    ring.style.top = (e.clientY - 18) + 'px';
+    dot.style.left = (e.clientX - 3) + 'px'; dot.style.top = (e.clientY - 3) + 'px';
+    ring.style.left = (e.clientX - 20) + 'px'; ring.style.top = (e.clientY - 20) + 'px';
   });
-  document.querySelectorAll('a, button, .taco-tag, .taco-card').forEach(el => {
+  document.querySelectorAll('a, button, .collection-card').forEach(el => {
     el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
     el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
   });
@@ -844,69 +755,55 @@ if (window.innerWidth > 768) {
 // ========== NUMBER COUNTER ==========
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = parseInt(el.dataset.target);
-      const duration = 1500;
-      const start = performance.now();
-      const animate = (now) => {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        // Ease out cubic
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.floor(eased * target);
-        if (progress < 1) requestAnimationFrame(animate);
-        else el.textContent = target;
-      };
-      requestAnimationFrame(animate);
-      counterObserver.unobserve(el);
-    }
+    if (!entry.isIntersecting) return;
+    const el = entry.target, target = parseInt(el.dataset.target);
+    const start = performance.now(), dur = 2000;
+    const animate = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(animate);
+      else el.textContent = target.toLocaleString();
+    };
+    requestAnimationFrame(animate);
+    counterObserver.unobserve(el);
   });
 }, { threshold: 0.5 });
 document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
 
-// ========== 3D TILT ==========
-document.querySelectorAll('[data-tilt]').forEach(card => {
+// ========== VIDEO LAZY PLAY ==========
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.play().catch(() => {});
+    else entry.target.pause();
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('video').forEach(v => videoObserver.observe(v));
+
+// ========== CARD TILT (subtle) ==========
+document.querySelectorAll('.collection-card').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${y * -4}deg) translateY(-4px)`;
+    card.style.transform = `perspective(800px) rotateY(${x * 4}deg) rotateX(${y * -3}deg) translateY(-6px)`;
   });
   card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0)';
+    card.style.transform = '';
   });
-});
-
-// ========== VIDEO LAZY PLAY (mobile fix) ==========
-const videoObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.isIntersecting) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  });
-}, { threshold: 0.25 });
-document.querySelectorAll('.video-gallery-item video, .video-interlude video').forEach(v => {
-  v.setAttribute('preload', 'metadata');
-  videoObserver.observe(v);
 });
 
 // ========== MAGNETIC BUTTON ==========
 const btn = document.getElementById('magneticBtn');
 if (btn && window.innerWidth > 768) {
-  btn.parentElement.addEventListener('mousemove', (e) => {
+  btn.addEventListener('mousemove', (e) => {
     const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) * 0.3;
-    const dy = (e.clientY - cy) * 0.3;
-    btn.style.transform = `translate(${dx}px, ${dy}px) scale(1.05)`;
+    const dx = (e.clientX - rect.left - rect.width / 2) * 0.25;
+    const dy = (e.clientY - rect.top - rect.height / 2) * 0.25;
+    btn.style.transform = `translate(${dx}px, ${dy}px)`;
   });
-  btn.parentElement.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0, 0) scale(1)';
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
   });
 }
 </script>
