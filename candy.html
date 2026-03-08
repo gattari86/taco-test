@@ -7,636 +7,687 @@
 <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,700;0,900;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
-  @property --gradient-angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
+  @property --btn-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
   :root {
-    --plum: #2D1B4E;
-    --plum-light: #3D2B5E;
-    --hotpink: #E91E8B;
-    --lavender: #D8B4FE;
-    --vanilla: #FFF8F0;
-    --gold: #F0C040;
-    --rose: #FF6B9D;
-    --bg: #0F0A1A;
+    --cream: #FAF6F1;
+    --charcoal: #1a1a1a;
+    --rosegold: #C4956A;
+    --blush: #F2D5D0;
+    --warm-brown: #8B6D5C;
+    --soft-pink: #E8C4C4;
+    --deep: #2C1810;
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--vanilla);
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
     overflow-x: hidden;
     cursor: none;
+    font-weight: 300;
   }
 
-  /* ========== FILM GRAIN ========== */
+  /* ========== FILM GRAIN (subtle on light bg) ========== */
   body::after {
     content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    pointer-events: none;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
+    position: fixed; inset: 0; z-index: 9998;
+    pointer-events: none; opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-size: 256px 256px;
   }
 
-  /* ========== SCROLL PROGRESS ========== */
-  .scroll-progress {
-    position: fixed; top: 0; left: 0; height: 3px;
-    background: linear-gradient(90deg, var(--hotpink), var(--lavender), var(--gold));
-    z-index: 9999; width: 0%;
-    transition: width 0.1s linear;
+  /* ========== SCROLL PROGRESS (side rail, not top bar) ========== */
+  .scroll-rail {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 80px; background: rgba(196, 149, 106, 0.15);
+    border-radius: 2px; z-index: 9999;
   }
-  @media (max-width: 768px) { .scroll-progress { height: 4px; } }
+  .scroll-rail-fill {
+    width: 100%; background: var(--rosegold);
+    border-radius: 2px; transition: height 0.15s linear;
+    height: 0%;
+  }
 
-  /* ========== CUSTOM CURSOR ========== */
+  /* ========== CUSTOM CURSOR (rose gold) ========== */
   .cursor-dot {
-    position: fixed; width: 8px; height: 8px;
-    background: var(--hotpink); border-radius: 50%;
+    position: fixed; width: 6px; height: 6px;
+    background: var(--rosegold); border-radius: 50%;
     pointer-events: none; z-index: 9999;
-    transition: transform 0.1s ease; mix-blend-mode: difference;
+    transition: transform 0.1s ease;
   }
   .cursor-ring {
-    position: fixed; width: 36px; height: 36px;
-    border: 1.5px solid rgba(233, 30, 139, 0.5); border-radius: 50%;
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid rgba(196, 149, 106, 0.4); border-radius: 50%;
     pointer-events: none; z-index: 9999;
-    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
-    mix-blend-mode: difference;
+    transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
   }
-  .cursor-ring.hovering { width: 56px; height: 56px; border-color: var(--lavender); }
+  .cursor-ring.hovering {
+    width: 60px; height: 60px;
+    border-color: var(--rosegold);
+    background: rgba(196, 149, 106, 0.05);
+  }
 
-  /* ========== HERO ========== */
+  /* ========== HERO (photo-driven, editorial) ========== */
   .hero {
-    position: relative; height: 100vh; min-height: 600px;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; overflow: hidden; background: var(--bg);
+    position: relative; height: 100vh; min-height: 650px;
+    display: flex; align-items: flex-end;
+    overflow: hidden; background: var(--deep);
   }
-  #vanta-hero { position: absolute; inset: 0; z-index: 0; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://images.pexels.com/photos/4016507/pexels-photo-4016507.jpeg?auto=compress&cs=tinysrgb&w=1920');
+    background-size: cover; background-position: center 30%;
+    filter: brightness(0.45) saturate(1.2);
+  }
+  #vanta-hero {
+    position: absolute; inset: 0; z-index: 1;
+    mix-blend-mode: screen; opacity: 0.4;
+  }
   .hero-content {
-    position: relative; z-index: 2; max-width: 750px;
-    padding: 3.5rem 4rem;
-    background: rgba(45, 27, 78, 0.35);
-    backdrop-filter: blur(24px) saturate(1.5);
-    -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border-radius: 28px;
-    border: 1px solid rgba(216, 180, 254, 0.12);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(216, 180, 254, 0.08);
+    position: relative; z-index: 2;
+    padding: 0 6vw 8vh;
+    max-width: 900px;
   }
-  .hero-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--hotpink), var(--rose));
-    color: white; padding: 6px 22px; border-radius: 30px;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 3px;
-    text-transform: uppercase; margin-bottom: 1.5rem;
-    animation: fadeInDown 1s ease 0.3s both;
+  .hero-eyebrow {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 6px; text-transform: uppercase;
+    color: var(--rosegold); margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease 0.2s both;
   }
   .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.5rem, 9vw, 6.5rem);
-    font-weight: 700; line-height: 1.05; margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--vanilla) 0%, var(--lavender) 50%, var(--hotpink) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: fadeInUp 1s ease 0.5s both;
-    min-height: 1.2em;
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--cream); margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease 0.4s both;
+    min-height: 1.1em;
   }
   .typed-cursor {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.5rem, 9vw, 6.5rem); font-weight: 700;
-    background: linear-gradient(135deg, var(--vanilla) 0%, var(--lavender) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900; color: var(--rosegold);
+    animation: blink 1s step-end infinite;
   }
-  .hero p {
-    font-size: 1.2rem; color: rgba(255,248,240,0.7);
-    max-width: 500px; margin: 0 auto;
-    animation: fadeInUp 1s ease 0.7s both;
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero-sub {
+    font-size: 1.15rem; color: rgba(250, 246, 241, 0.6);
+    max-width: 420px; line-height: 1.7; font-weight: 300;
+    animation: fadeInUp 1s ease 0.6s both;
   }
+  .hero-line {
+    width: 60px; height: 1px; background: var(--rosegold);
+    margin: 2rem 0; animation: fadeInUp 1s ease 0.8s both;
+  }
+
+  /* Scroll hint -- pure CSS chevron */
   .scroll-hint {
-    position: absolute; bottom: 24px; left: 50%;
-    transform: translateX(-50%); z-index: 2;
-    display: flex; flex-direction: column; align-items: center;
+    position: absolute; bottom: 30px; left: 50%;
+    transform: translateX(-50%); z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
   }
   .scroll-hint span {
-    color: rgba(216, 180, 254, 0.5); font-size: 0.7rem;
-    letter-spacing: 3px; text-transform: uppercase;
+    font-size: 0.65rem; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(250,246,241,0.35);
+    font-weight: 400;
   }
-  .scroll-hint dotlottie-player { width: 50px; height: 50px; }
+  .scroll-chevron {
+    width: 20px; height: 20px;
+    border-right: 1px solid var(--rosegold);
+    border-bottom: 1px solid var(--rosegold);
+    transform: rotate(45deg);
+    animation: chevronBounce 2s ease-in-out infinite;
+  }
+  @keyframes chevronBounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.4; }
+    50% { transform: rotate(45deg) translateY(6px); opacity: 1; }
+  }
 
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ========== MARQUEE ========== */
-  .marquee {
-    overflow: hidden; white-space: nowrap;
-    padding: 1.15rem 0;
-    background: linear-gradient(90deg, var(--hotpink), #9B30FF, var(--hotpink));
-    position: relative; z-index: 1;
+  /* ========== EDITORIAL STATEMENT ========== */
+  .editorial {
+    padding: 8rem 6vw;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+    max-width: 1200px; margin: 0 auto;
   }
-  .marquee-inner { display: inline-block; animation: marqueeScroll 25s linear infinite; }
-  .marquee-inner span {
-    display: inline-block; padding: 0 2.5rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem; font-weight: 600; color: white;
-    text-transform: uppercase; letter-spacing: 3px;
+  .editorial-text h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 3.2rem; font-weight: 700;
+    line-height: 1.15; margin-bottom: 1.5rem;
+    color: var(--charcoal);
   }
-  @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-  /* ========== STATS ========== */
-  .stats-section {
-    position: relative; padding: 5rem 2rem 6rem; overflow: hidden;
+  .editorial-text h2 em {
+    font-style: italic; color: var(--rosegold);
   }
-  .stats-section::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 25% 40%, rgba(233, 30, 139, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 75% 60%, rgba(155, 48, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(240, 192, 64, 0.08) 0%, transparent 50%);
-    animation: meshShift 10s ease-in-out infinite alternate;
+  .editorial-text p {
+    font-size: 1rem; line-height: 1.8;
+    color: rgba(26,26,26,0.55); max-width: 400px;
   }
-  @keyframes meshShift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(20deg); } }
-  .stats-bar {
+  .editorial-numbers {
     display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 2rem; max-width: 900px; margin: 0 auto;
-    text-align: center; position: relative; z-index: 1;
+    gap: 2rem; margin-top: 3rem;
   }
-  .stat-item { position: relative; }
-  .stat-item h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem; font-weight: 700; color: var(--lavender);
+  .ed-num h3 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.5rem; font-weight: 700;
+    color: var(--rosegold);
   }
-  .stat-item h3 .suffix { font-size: 1.8rem; color: var(--hotpink); }
-  .stat-item p {
-    font-size: 0.8rem; color: rgba(216, 180, 254, 0.5);
-    text-transform: uppercase; letter-spacing: 2px; margin-top: 6px;
+  .ed-num p {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 2px; color: rgba(26,26,26,0.35);
+    margin-top: 4px;
   }
-  .stat-sparkle {
-    position: absolute; top: -30px; left: 50%;
-    transform: translateX(-50%); width: 55px; height: 55px;
-    pointer-events: none;
-  }
-
-  /* ========== VANTA DIVIDER ========== */
-  .vanta-divider { position: relative; height: 180px; overflow: hidden; }
-  #vanta-net { position: absolute; inset: 0; }
-
-  /* ========== SECTION ========== */
-  .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
-  .section-header { text-align: center; margin-bottom: 3.5rem; }
-  .section-header h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem; font-weight: 700;
-    background: linear-gradient(135deg, var(--vanilla) 0%, var(--lavender) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .section-header .accent-line {
-    width: 50px; height: 3px;
-    background: linear-gradient(90deg, var(--hotpink), var(--lavender));
-    margin: 1rem auto; border-radius: 2px;
-  }
-  .section-header p { color: rgba(255,248,240,0.5); font-size: 1.05rem; }
-
-  /* ========== SECTION TRANSITIONS ========== */
-  .wave-top { position: relative; }
-  .wave-top::before {
-    content: ''; position: absolute; top: -50px; left: 0;
-    width: 100%; height: 50px; background: var(--bg);
-    clip-path: ellipse(55% 100% at 50% 100%);
-    z-index: 3; pointer-events: none;
-  }
-
-  /* ========== CANDY CARDS ========== */
-  .candy-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-  }
-  .candy-card {
-    border-radius: 20px; overflow: hidden;
-    background: rgba(45, 27, 78, 0.4);
-    border: 1px solid rgba(216, 180, 254, 0.08);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  .editorial-photo {
+    border-radius: 300px 300px 20px 20px;
+    overflow: hidden; height: 550px;
     position: relative;
   }
-  .candy-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 24px 60px rgba(233, 30, 139, 0.15), 0 0 40px rgba(155, 48, 255, 0.08);
-    border-color: rgba(233, 30, 139, 0.2);
-  }
-  .candy-card-img {
-    height: 220px; background-size: cover;
-    background-position: center; position: relative;
-    overflow: hidden;
-  }
-  .candy-card-img::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 40%, rgba(15, 10, 26, 0.9) 100%);
-  }
-  .candy-card:hover .candy-card-img::after {
-    background: linear-gradient(180deg, rgba(233, 30, 139, 0.15) 0%, rgba(15, 10, 26, 0.85) 100%);
-  }
-  .candy-card-badge {
-    position: absolute; top: 14px; right: 14px; z-index: 2;
-    background: rgba(233, 30, 139, 0.85); color: white;
-    padding: 4px 12px; border-radius: 20px;
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;
-    text-transform: uppercase; backdrop-filter: blur(8px);
-  }
-  .candy-card-info { padding: 1.5rem; }
-  .candy-card-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 700; color: var(--vanilla);
-    margin-bottom: 0.35rem;
-  }
-  .candy-card-desc {
-    font-size: 0.88rem; color: rgba(255,248,240,0.55);
-    line-height: 1.6; margin-bottom: 1rem;
-  }
-  .candy-card-price {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 700; color: var(--lavender);
-  }
-  .candy-card-tags { display: flex; gap: 6px; margin-top: 0.75rem; flex-wrap: wrap; }
-  .candy-tag {
-    background: rgba(216, 180, 254, 0.1); color: var(--lavender);
-    padding: 3px 12px; border-radius: 16px;
-    font-size: 0.72rem; font-weight: 500;
-  }
-  .candy-tag.new { background: rgba(233, 30, 139, 0.15); color: var(--rose); }
-
-  /* ========== FEATURED / FULL-WIDTH VIDEO ========== */
-  .featured-video {
-    position: relative; height: 450px; overflow: hidden;
-    border-radius: 20px; margin: 3rem 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .featured-video video {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; filter: brightness(0.3) saturate(1.3);
-  }
-  .featured-video-content {
-    position: relative; z-index: 1; text-align: center;
-    padding: 3rem; max-width: 600px;
-    background: rgba(45, 27, 78, 0.3);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-radius: 24px; border: 1px solid rgba(216, 180, 254, 0.1);
-  }
-  .featured-video-content h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.75rem; margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, var(--vanilla), var(--lavender));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .featured-video-content p {
-    color: rgba(255,248,240,0.6); font-size: 1.05rem;
-  }
-
-  /* ========== VIDEO GALLERY ========== */
-  .video-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0; }
-  .video-gallery-item {
-    border-radius: 16px; overflow: hidden; position: relative;
-    aspect-ratio: 16/9;
-  }
-  .video-gallery-item video {
+  .editorial-photo img {
     width: 100%; height: 100%; object-fit: cover;
-    filter: saturate(1.1) brightness(0.85);
-    transition: transform 0.5s ease, filter 0.5s ease;
+    transition: transform 6s ease;
   }
-  .video-gallery-item:hover video {
-    transform: scale(1.05); filter: saturate(1.3) brightness(1);
+  .editorial-photo:hover img { transform: scale(1.08); }
+
+  /* ========== HORIZONTAL SCROLL COLLECTION ========== */
+  .collection-section { padding: 6rem 0; overflow: hidden; }
+  .collection-header {
+    text-align: center; margin-bottom: 3rem; padding: 0 2rem;
   }
-  .video-gallery-item .overlay {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 1.25rem;
-    background: linear-gradient(transparent, rgba(15, 10, 26, 0.9));
-    font-size: 0.85rem; color: rgba(255,248,240,0.8); font-weight: 500;
+  .collection-header h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.8rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .collection-header .thin-rule {
+    width: 40px; height: 1px; background: var(--rosegold);
+    margin: 1rem auto;
+  }
+  .collection-header p {
+    color: rgba(26,26,26,0.4); font-size: 0.95rem; font-weight: 300;
+  }
+  .collection-scroll {
+    display: flex; gap: 1.5rem;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 1rem 6vw 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .collection-scroll::-webkit-scrollbar { display: none; }
+  .collection-card {
+    flex: 0 0 320px; scroll-snap-align: start;
+    border-radius: 16px; overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+  }
+  .collection-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(196, 149, 106, 0.12);
+  }
+  .collection-card-img {
+    height: 280px; background-size: cover;
+    background-position: center; position: relative;
+  }
+  .collection-card-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(255,255,255,0.9) 100%);
+  }
+  .cc-badge {
+    position: absolute; top: 16px; left: 16px; z-index: 2;
+    background: var(--rosegold); color: white;
+    padding: 5px 14px; border-radius: 4px;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .collection-card-info { padding: 1.5rem; }
+  .cc-name {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--charcoal); margin-bottom: 0.4rem;
+  }
+  .cc-desc {
+    font-size: 0.85rem; color: rgba(26,26,26,0.45);
+    line-height: 1.65; margin-bottom: 1rem;
+  }
+  .cc-bottom {
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .cc-price {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.2rem; font-weight: 700; color: var(--rosegold);
+  }
+  .cc-tags { display: flex; gap: 6px; }
+  .cc-tag {
+    background: var(--cream); color: var(--warm-brown);
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 0.68rem; font-weight: 500;
   }
 
-  /* ========== QUOTE STRIP ========== */
-  .quote-strip {
-    text-align: center; padding: 4rem 2rem;
+  /* ========== QUOTE (editorial large type) ========== */
+  .big-quote {
+    padding: 7rem 6vw;
+    text-align: center;
+    background: var(--deep);
     position: relative; overflow: hidden;
   }
-  .quote-strip::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(233, 30, 139, 0.06) 0%, rgba(155, 48, 255, 0.04) 100%);
+  #vanta-quote { position: absolute; inset: 0; z-index: 0; opacity: 0.3; }
+  .big-quote blockquote {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 500; font-style: italic;
+    color: var(--cream); max-width: 800px;
+    margin: 0 auto; line-height: 1.35;
+    position: relative; z-index: 1;
   }
-  .quote-strip blockquote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem; font-weight: 500; font-style: italic;
-    color: var(--lavender); max-width: 700px; margin: 0 auto;
-    line-height: 1.5; position: relative; z-index: 1;
-  }
-  .quote-strip cite {
-    display: block; margin-top: 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem; font-style: normal;
-    color: rgba(216, 180, 254, 0.4); letter-spacing: 2px;
-    text-transform: uppercase;
+  .big-quote cite {
+    display: block; margin-top: 2rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem; font-style: normal;
+    color: var(--rosegold); letter-spacing: 4px;
+    text-transform: uppercase; position: relative; z-index: 1;
   }
 
-  /* ========== CTA ========== */
-  .cta-section {
-    position: relative; margin: 3rem 0; border-radius: 20px;
-    overflow: hidden; min-height: 380px;
-    display: flex; align-items: center; justify-content: center;
+  /* ========== VIDEO SECTION (full-width parallax) ========== */
+  .video-section {
+    position: relative; height: 80vh; min-height: 500px;
+    overflow: hidden; display: flex;
+    align-items: center; justify-content: center;
   }
-  #vanta-cta { position: absolute; inset: 0; z-index: 0; }
-  .cta-content {
+  .video-section video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; filter: brightness(0.35);
+  }
+  .video-section-content {
     position: relative; z-index: 1; text-align: center;
-    padding: 3rem 2.5rem;
-    background: rgba(15, 10, 26, 0.4);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-radius: 24px; border: 1px solid rgba(216, 180, 254, 0.08);
-    max-width: 550px; margin: 2rem;
+    max-width: 600px; padding: 2rem;
   }
-  .cta-content h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--lavender);
+  .video-section-content .vs-eyebrow {
+    font-size: 0.7rem; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--rosegold);
+    margin-bottom: 1rem;
   }
-  .cta-content p {
-    color: rgba(255,248,240,0.55); font-size: 0.95rem;
-    margin-bottom: 2rem; max-width: 420px; margin-left: auto; margin-right: auto;
+  .video-section-content h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700; color: var(--cream);
+    line-height: 1.05; margin-bottom: 1rem;
   }
-  .cta-lottie-row { display: flex; justify-content: center; gap: 1rem; align-items: center; margin-bottom: 1rem; }
-  .cta-button {
-    display: inline-block; padding: 16px 48px; border-radius: 50px;
-    font-size: 1rem; font-weight: 600; text-decoration: none;
-    letter-spacing: 1px; color: white;
-    background: linear-gradient(var(--gradient-angle), var(--hotpink), #9B30FF, var(--hotpink));
-    background-size: 200% 200%;
-    animation: gradientSpin 4s linear infinite;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 24px rgba(233, 30, 139, 0.3);
+  .video-section-content p {
+    color: rgba(250,246,241,0.5); font-size: 1rem;
+    line-height: 1.7; font-weight: 300;
   }
-  @keyframes gradientSpin { 0% { --gradient-angle: 0deg; } 100% { --gradient-angle: 360deg; } }
-  .cta-button:hover { box-shadow: 0 8px 36px rgba(233, 30, 139, 0.5); }
+
+  /* ========== PROCESS (side-by-side video grid) ========== */
+  .process-section {
+    padding: 6rem 6vw; max-width: 1200px; margin: 0 auto;
+  }
+  .process-header {
+    margin-bottom: 3rem;
+  }
+  .process-header h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.5rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .process-header p {
+    color: rgba(26,26,26,0.4); font-size: 0.95rem;
+  }
+  .process-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .process-item {
+    position: relative; border-radius: 12px;
+    overflow: hidden; aspect-ratio: 4/3;
+    background: var(--charcoal);
+  }
+  .process-item video {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.7) saturate(1.1);
+    transition: filter 0.5s ease, transform 0.5s ease;
+  }
+  .process-item:hover video {
+    filter: brightness(0.85) saturate(1.2);
+    transform: scale(1.03);
+  }
+  .process-item .p-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  }
+  .process-item .p-num {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--rosegold); line-height: 1;
+  }
+  .process-item .p-text {
+    font-size: 0.85rem; color: rgba(250,246,241,0.7);
+    margin-top: 4px; font-weight: 400;
+  }
+
+  /* ========== CTA (clean editorial, no 3D bg) ========== */
+  .cta-section {
+    padding: 8rem 6vw;
+    background: linear-gradient(135deg, var(--blush) 0%, var(--soft-pink) 50%, var(--cream) 100%);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,149,106,0.08), transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(139,109,92,0.06), transparent 60%);
+  }
+  .cta-inner { position: relative; z-index: 1; max-width: 550px; margin: 0 auto; }
+  .cta-lottie { width: 80px; height: 80px; margin: 0 auto 1.5rem; }
+  .cta-section h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700; color: var(--deep);
+    line-height: 1.15; margin-bottom: 1rem;
+  }
+  .cta-section p {
+    color: rgba(44,24,16,0.5); font-size: 1rem;
+    line-height: 1.7; margin-bottom: 2.5rem; font-weight: 300;
+  }
+  .cta-btn {
+    display: inline-block; padding: 18px 52px;
+    background: var(--deep); color: var(--cream);
+    text-decoration: none; font-size: 0.8rem;
+    font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; border-radius: 0;
+    transition: background 0.4s ease, letter-spacing 0.4s ease;
+    position: relative; overflow: hidden;
+  }
+  .cta-btn::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--rosegold);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s ease;
+  }
+  .cta-btn:hover {
+    background: var(--charcoal);
+    letter-spacing: 5px;
+  }
+  .cta-btn:hover::after {
+    transform: scaleX(1); transform-origin: left;
+  }
 
   /* ========== FOOTER ========== */
   footer {
-    text-align: center; padding: 3rem 2rem;
-    color: rgba(216, 180, 254, 0.25); font-size: 0.85rem;
-    border-top: 1px solid rgba(216, 180, 254, 0.06);
-    max-width: 1100px; margin: 0 auto;
+    padding: 4rem 6vw 3rem;
+    border-top: 1px solid rgba(26,26,26,0.06);
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between;
+    align-items: flex-end; flex-wrap: wrap; gap: 2rem;
   }
-  footer .heart { color: var(--hotpink); }
-  .powered-by {
-    display: flex; justify-content: center; gap: 0.75rem;
-    margin-top: 1rem; flex-wrap: wrap;
+  .footer-left {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--charcoal);
   }
-  .powered-by span {
-    color: rgba(216, 180, 254, 0.35); font-size: 0.72rem;
-    padding: 4px 14px; border: 1px solid rgba(216, 180, 254, 0.06);
-    border-radius: 20px; background: rgba(216, 180, 254, 0.02);
+  .footer-left small {
+    display: block; font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem; font-weight: 300;
+    color: rgba(26,26,26,0.3); margin-top: 6px;
+  }
+  .footer-right {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .footer-right span {
+    font-size: 0.65rem; font-weight: 400;
+    color: rgba(26,26,26,0.25); padding: 4px 12px;
+    border: 1px solid rgba(26,26,26,0.06); border-radius: 3px;
+    letter-spacing: 1px; text-transform: uppercase;
   }
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 768px) {
     body { cursor: auto; }
     .cursor-dot, .cursor-ring { display: none; }
-    .hero-content { padding: 2rem 1.5rem; margin: 0 1rem; }
-    .candy-grid { grid-template-columns: 1fr; }
-    .video-gallery { grid-template-columns: 1fr; }
-    .stats-bar { grid-template-columns: 1fr; gap: 2rem; }
-    .featured-video { height: 350px; }
-    .featured-video-content { padding: 2rem 1.5rem; }
-    .featured-video-content h2 { font-size: 2rem; }
-    .cta-content h2 { font-size: 1.75rem; }
-    .vanta-divider { height: 100px; }
-    .marquee { padding: 1.25rem 0; }
-    .marquee-inner span { font-size: 0.85rem; padding: 0 1.5rem; }
-    .quote-strip blockquote { font-size: 1.5rem; }
-    .wave-top::before { height: 35px; top: -35px; }
-    .candy-card-img { height: 200px; }
-  }
-
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .candy-grid { grid-template-columns: repeat(2, 1fr); }
+    .scroll-rail { right: 10px; }
+    .hero-content { padding: 0 1.5rem 6vh; }
+    .hero h1 { font-size: clamp(3rem, 12vw, 5rem); }
+    .editorial {
+      grid-template-columns: 1fr; padding: 4rem 1.5rem;
+      gap: 2.5rem;
+    }
+    .editorial-photo {
+      height: 400px;
+      border-radius: 200px 200px 16px 16px;
+      order: -1;
+    }
+    .editorial-numbers { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .ed-num h3 { font-size: 1.8rem; }
+    .collection-card { flex: 0 0 280px; }
+    .collection-card-img { height: 220px; }
+    .process-grid { grid-template-columns: 1fr; }
+    .video-section { height: 60vh; min-height: 400px; }
+    .video-section-content h2 { font-size: 2.2rem; }
+    .cta-section { padding: 5rem 1.5rem; }
+    .big-quote { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; align-items: center; text-align: center; }
   }
 </style>
 </head>
 <body>
 
-<div class="scroll-progress" id="scrollProgress"></div>
+<!-- Scroll rail (side, not top) -->
+<div class="scroll-rail"><div class="scroll-rail-fill" id="scrollFill"></div></div>
+
+<!-- Custom cursor -->
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- ========== HERO ========== -->
 <section class="hero">
+  <div class="hero-bg"></div>
   <div id="vanta-hero"></div>
-  <div class="hero-content" data-aos="zoom-in" data-aos-duration="1000">
-    <div class="hero-badge">Artisan Confections</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">Artisan Confections -- Est. 2024</div>
     <h1><span id="typed-output"></span></h1>
-    <p>Handcrafted sweets for the incurably nostalgic. Every piece made in small batches, from scratch, right here.</p>
+    <div class="hero-line" data-aos="fade-up" data-aos-duration="800" data-aos-delay="800"></div>
+    <p class="hero-sub" data-aos="fade-up" data-aos-duration="800" data-aos-delay="600">Handcrafted sweets for the incurably nostalgic. Small batch. No shortcuts. Made right here.</p>
   </div>
   <div class="scroll-hint">
-    <span>Explore</span>
-    <dotlottie-player src="https://assets-v2.lottiefiles.com/a/fde994d0-1152-11ee-b091-8fed128708b3/jHD8qVySPh.lottie" background="transparent" speed="1" loop autoplay></dotlottie-player>
+    <span>Scroll</span>
+    <div class="scroll-chevron"></div>
   </div>
 </section>
 
-<!-- Marquee -->
-<div class="marquee">
-  <div class="marquee-inner">
-    <span>Truffles</span><span>&#x2726;</span>
-    <span>Caramels</span><span>&#x2726;</span>
-    <span>Gummy Bears</span><span>&#x2726;</span>
-    <span>Lollipops</span><span>&#x2726;</span>
-    <span>Chocolate Bark</span><span>&#x2726;</span>
-    <span>Cotton Candy</span><span>&#x2726;</span>
-    <span>Toffee</span><span>&#x2726;</span>
-    <span>Macarons</span><span>&#x2726;</span>
-    <span>Truffles</span><span>&#x2726;</span>
-    <span>Caramels</span><span>&#x2726;</span>
-    <span>Gummy Bears</span><span>&#x2726;</span>
-    <span>Lollipops</span><span>&#x2726;</span>
-    <span>Chocolate Bark</span><span>&#x2726;</span>
-    <span>Cotton Candy</span><span>&#x2726;</span>
-    <span>Toffee</span><span>&#x2726;</span>
-    <span>Macarons</span><span>&#x2726;</span>
+<!-- ========== EDITORIAL STATEMENT + STATS ========== -->
+<div class="editorial">
+  <div class="editorial-text" data-aos="fade-right" data-aos-duration="1000">
+    <h2>Candy made for people who <em>remember</em></h2>
+    <p>Every jar, tin, and box we ship carries a piece of a story. The butterscotch your grandmother kept in her purse. The sour worms from the corner store after school. We make those memories taste exactly how you remember.</p>
+    <div class="editorial-numbers">
+      <div class="ed-num">
+        <h3><span class="counter" data-target="1247">0</span></h3>
+        <p>Crafted</p>
+      </div>
+      <div class="ed-num">
+        <h3><span class="counter" data-target="23">0</span></h3>
+        <p>Flavors</p>
+      </div>
+      <div class="ed-num">
+        <h3><span class="counter" data-target="100">0</span>%</h3>
+        <p>Real</p>
+      </div>
+    </div>
+  </div>
+  <div class="editorial-photo" data-aos="fade-left" data-aos-duration="1200">
+    <img src="https://images.pexels.com/photos/3776939/pexels-photo-3776939.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Artisan macarons" loading="lazy">
   </div>
 </div>
 
-<!-- ========== STATS ========== -->
-<div class="stats-section" data-aos="fade-up" data-aos-duration="800">
-  <div class="stats-bar">
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-      <dotlottie-player class="stat-sparkle" src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.6" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="1247">0</span></h3>
-      <p>Candies Crafted</p>
-    </div>
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="250">
-      <dotlottie-player class="stat-sparkle" src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.5" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="23">0</span></h3>
-      <p>Signature Flavors</p>
-    </div>
-    <div class="stat-item" data-aos="zoom-in" data-aos-delay="400">
-      <dotlottie-player class="stat-sparkle" src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.7" loop autoplay></dotlottie-player>
-      <h3><span class="counter" data-target="100">0</span><span class="suffix">%</span></h3>
-      <p>Pure Happiness</p>
-    </div>
-  </div>
-</div>
-
-<!-- Vanta Net divider -->
-<div class="vanta-divider"><div id="vanta-net"></div></div>
-
-<!-- ========== THE COLLECTION ========== -->
-<div class="section wave-top">
-  <div class="section-header" data-aos="fade-down" data-aos-duration="600">
+<!-- ========== THE COLLECTION (horizontal scroll) ========== -->
+<div class="collection-section">
+  <div class="collection-header" data-aos="fade-up" data-aos-duration="800">
     <h2>The Collection</h2>
-    <div class="accent-line"></div>
-    <p>Small batch. Big flavor. Zero compromise.</p>
+    <div class="thin-rule"></div>
+    <p>Swipe to explore what's in season.</p>
   </div>
 
-  <div class="candy-grid">
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/1193742/pexels-photo-1193742.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-        <span class="candy-card-badge">Bestseller</span>
+  <div class="collection-scroll">
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="0">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/1193742/pexels-photo-1193742.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">Bestseller</span>
       </div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Rainbow Drops</div>
-        <div class="candy-card-desc">Hand-pulled hard candy in every color of the spectrum. Shatter-crack texture, fruit-forward finish.</div>
-        <div class="candy-card-price">$14 / jar</div>
-        <div class="candy-card-tags"><span class="candy-tag">Fruit</span><span class="candy-tag">Classic</span></div>
-      </div>
-    </div>
-
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/4016507/pexels-photo-4016507.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-        <span class="candy-card-badge">New</span>
-      </div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Velvet Truffles</div>
-        <div class="candy-card-desc">Dark chocolate ganache rolled in cocoa and edible gold. Melts before it hits the back of your tongue.</div>
-        <div class="candy-card-price">$22 / box</div>
-        <div class="candy-card-tags"><span class="candy-tag">Chocolate</span><span class="candy-tag new">New</span></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Rainbow Drops</div>
+        <div class="cc-desc">Hand-pulled hard candy. Shatter-crack texture, fruit-forward finish. Every color of the spectrum.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$14</span>
+          <div class="cc-tags"><span class="cc-tag">Fruit</span><span class="cc-tag">Classic</span></div>
+        </div>
       </div>
     </div>
 
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/5469039/pexels-photo-5469039.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')"></div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Sour Worms</div>
-        <div class="candy-card-desc">Dual-coated gummy worms with a citric acid bite that makes your face do the thing.</div>
-        <div class="candy-card-price">$9 / bag</div>
-        <div class="candy-card-tags"><span class="candy-tag">Sour</span><span class="candy-tag">Gummy</span></div>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="80">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/14275553/pexels-photo-14275553.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">New</span>
+      </div>
+      <div class="collection-card-info">
+        <div class="cc-name">Velvet Truffles</div>
+        <div class="cc-desc">Dark chocolate ganache rolled in cocoa and edible gold. Melts before it hits the back of your tongue.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$22</span>
+          <div class="cc-tags"><span class="cc-tag">Chocolate</span></div>
+        </div>
       </div>
     </div>
 
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/718759/pexels-photo-718759.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')"></div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Salt & Honey Caramels</div>
-        <div class="candy-card-desc">Slow-cooked caramel with Maldon sea salt and raw wildflower honey. Chewy. Dangerous.</div>
-        <div class="candy-card-price">$18 / tin</div>
-        <div class="candy-card-tags"><span class="candy-tag">Caramel</span><span class="candy-tag">Salted</span></div>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="160">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/5469039/pexels-photo-5469039.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Sour Worms</div>
+        <div class="cc-desc">Dual-coated gummy worms with a citric acid bite that makes your face do the thing.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$9</span>
+          <div class="cc-tags"><span class="cc-tag">Sour</span><span class="cc-tag">Gummy</span></div>
+        </div>
       </div>
     </div>
 
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/5469043/pexels-photo-5469043.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')">
-        <span class="candy-card-badge">Limited</span>
-      </div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Cloud Puffs</div>
-        <div class="candy-card-desc">Pastel meringue kisses that dissolve on contact. Lavender, rose, and vanilla bean.</div>
-        <div class="candy-card-price">$12 / box</div>
-        <div class="candy-card-tags"><span class="candy-tag">Meringue</span><span class="candy-tag new">Limited</span></div>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="240">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/718759/pexels-photo-718759.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Salt & Honey Caramels</div>
+        <div class="cc-desc">Slow-cooked caramel with Maldon sea salt and raw wildflower honey. Chewy. Dangerous.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$18</span>
+          <div class="cc-tags"><span class="cc-tag">Caramel</span></div>
+        </div>
       </div>
     </div>
 
-    <div class="candy-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-      <div class="candy-card-img" style="background-image: url('https://images.pexels.com/photos/4015264/pexels-photo-4015264.jpeg?auto=compress&cs=tinysrgb&h=650&w=940')"></div>
-      <div class="candy-card-info">
-        <div class="candy-card-name">Midnight Bark</div>
-        <div class="candy-card-desc">72% cacao dark chocolate studded with pistachios, dried cranberries, and a whisper of espresso.</div>
-        <div class="candy-card-price">$16 / slab</div>
-        <div class="candy-card-tags"><span class="candy-tag">Chocolate</span><span class="candy-tag">Dark</span></div>
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="320">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/7379704/pexels-photo-7379704.jpeg?auto=compress&cs=tinysrgb&w=640')">
+        <span class="cc-badge">Limited</span>
+      </div>
+      <div class="collection-card-info">
+        <div class="cc-name">Cloud Puffs</div>
+        <div class="cc-desc">Pastel meringue kisses that dissolve on contact. Lavender, rose, and vanilla bean.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$12</span>
+          <div class="cc-tags"><span class="cc-tag">Meringue</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" data-aos="fade-up" data-aos-delay="400">
+      <div class="collection-card-img" style="background-image: url('https://images.pexels.com/photos/4015264/pexels-photo-4015264.jpeg?auto=compress&cs=tinysrgb&w=640')"></div>
+      <div class="collection-card-info">
+        <div class="cc-name">Midnight Bark</div>
+        <div class="cc-desc">72% cacao dark chocolate studded with pistachios, dried cranberries, and a whisper of espresso.</div>
+        <div class="cc-bottom">
+          <span class="cc-price">$16</span>
+          <div class="cc-tags"><span class="cc-tag">Dark</span></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Quote strip -->
-<div class="quote-strip" data-aos="fade" data-aos-duration="1200">
+<!-- ========== QUOTE (dark section with Vanta BIRDS) ========== -->
+<div class="big-quote" data-aos="fade" data-aos-duration="1200">
+  <div id="vanta-quote"></div>
   <blockquote>"Life is uncertain. Eat candy first."</blockquote>
-  <cite>-- Everyone, eventually</cite>
+  <cite>Everyone, eventually</cite>
 </div>
 
-<!-- Full-width video interlude -->
-<div class="section">
-  <div class="featured-video" data-aos="zoom-in-up" data-aos-duration="900">
-    <video autoplay muted loop playsinline preload="metadata">
-      <source src="https://videos.pexels.com/video-files/6607842/6607842-hd_1920_1080_25fps.mp4" type="video/mp4">
-    </video>
-    <div class="featured-video-content">
-      <h2>Made by Hand</h2>
-      <p>Every batch is pulled, poured, and cut by hand in our studio kitchen. No shortcuts. No machines. Just craft.</p>
-    </div>
+<!-- ========== VIDEO HERO (full-width cinematic) ========== -->
+<div class="video-section">
+  <video autoplay muted loop playsinline preload="metadata">
+    <source src="https://videos.pexels.com/video-files/4458586/4458586-hd_1920_1080_24fps.mp4" type="video/mp4">
+  </video>
+  <div class="video-section-content" data-aos="fade-up" data-aos-duration="1000">
+    <div class="vs-eyebrow">The Process</div>
+    <h2>Made by Hand</h2>
+    <p>Every batch is pulled, poured, and cut by hand in our studio kitchen. No shortcuts. No machines. Just craft and patience.</p>
   </div>
+</div>
 
-  <!-- Video gallery -->
-  <div class="section-header" style="margin-top: 3rem;" data-aos="fade-down" data-aos-duration="600">
+<!-- ========== PROCESS GRID ========== -->
+<div class="process-section">
+  <div class="process-header" data-aos="fade-up" data-aos-duration="800">
     <h2>Inside the Studio</h2>
-    <div class="accent-line"></div>
     <p>Where sugar becomes something worth savoring.</p>
   </div>
 
-  <div class="video-gallery">
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="0" data-aos-duration="600">
+  <div class="process-grid">
+    <div class="process-item" data-aos="fade-up" data-aos-delay="0" data-aos-duration="700">
       <video autoplay muted loop playsinline preload="metadata">
         <source src="https://videos.pexels.com/video-files/6950913/6950913-hd_1920_1080_25fps.mp4" type="video/mp4">
       </video>
-      <div class="overlay">Tempering chocolate</div>
+      <div class="p-label"><div class="p-num">01</div><div class="p-text">Tempering chocolate</div></div>
     </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="150" data-aos-duration="600">
+    <div class="process-item" data-aos="fade-up" data-aos-delay="150" data-aos-duration="700">
       <video autoplay muted loop playsinline preload="metadata">
-        <source src="https://videos.pexels.com/video-files/13026212/13026212-hd_1920_1080_30fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/4458592/4458592-hd_1366_720_24fps.mp4" type="video/mp4">
       </video>
-      <div class="overlay">The pour</div>
+      <div class="p-label"><div class="p-num">02</div><div class="p-text">The pour</div></div>
     </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="300" data-aos-duration="600">
+    <div class="process-item" data-aos="fade-up" data-aos-delay="300" data-aos-duration="700">
       <video autoplay muted loop playsinline preload="metadata">
-        <source src="https://videos.pexels.com/video-files/3009107/3009107-sd_960_540_30fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/3009107/3009107-hd_1920_1080_30fps.mp4" type="video/mp4">
       </video>
-      <div class="overlay">Wrapping the goods</div>
+      <div class="p-label"><div class="p-num">03</div><div class="p-text">Wrapping the goods</div></div>
     </div>
-    <div class="video-gallery-item" data-aos="zoom-in-up" data-aos-delay="450" data-aos-duration="600">
+    <div class="process-item" data-aos="fade-up" data-aos-delay="450" data-aos-duration="700">
       <video autoplay muted loop playsinline preload="metadata">
-        <source src="https://videos.pexels.com/video-files/7012966/7012966-hd_1080_1350_25fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/4458579/4458579-hd_1366_720_24fps.mp4" type="video/mp4">
       </video>
-      <div class="overlay">Final touch</div>
-    </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="cta-section" data-aos="fade-up" data-aos-duration="800">
-    <div id="vanta-cta"></div>
-    <div class="cta-content">
-      <div class="cta-lottie-row">
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.6" loop autoplay style="width:45px;height:45px;"></dotlottie-player>
-        <h2>Get the Box</h2>
-        <dotlottie-player src="https://assets-v2.lottiefiles.com/a/e355f46c-1150-11ee-9da4-0f6ecc528bfc/pv1udSh7i5.lottie" background="transparent" speed="0.6" loop autoplay style="width:45px;height:45px;"></dotlottie-player>
-      </div>
-      <p>A curated box of seasonal confections delivered monthly. First month ships free.</p>
-      <a href="#" class="cta-button" id="magneticBtn">Subscribe</a>
+      <div class="p-label"><div class="p-num">04</div><div class="p-text">Quality check</div></div>
     </div>
   </div>
 </div>
 
-<footer data-aos="fade-up" data-aos-duration="400">
-  Made with <span class="heart">&hearts;</span> and way too much sugar<br>
-  This is a demo page. This candy shop is fictional. The cravings are very real.
-  <div class="powered-by">
+<!-- ========== CTA (clean editorial, blush gradient bg) ========== -->
+<div class="cta-section">
+  <div class="cta-inner" data-aos="fade-up" data-aos-duration="1000">
+    <dotlottie-player class="cta-lottie" src="https://assets-v2.lottiefiles.com/a/fde994d0-1152-11ee-b091-8fed128708b3/jHD8qVySPh.lottie" background="transparent" speed="0.5" loop autoplay></dotlottie-player>
+    <h2>Get the Monthly Box</h2>
+    <p>A curated selection of seasonal confections delivered to your door. First month ships free. Cancel whenever.</p>
+    <a href="#" class="cta-btn" id="magneticBtn">Subscribe Now</a>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer data-aos="fade-up" data-aos-duration="600">
+  <div class="footer-left">
+    Sugar & Co.
+    <small>A demo page. Fictional candy. Real cravings. Built with zero paid tools.</small>
+  </div>
+  <div class="footer-right">
     <span>Pexels</span>
     <span>LottieFiles</span>
     <span>Vanta.js</span>
@@ -649,55 +700,48 @@
 
 <!-- CDN scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.16/dist/typed.umd.js"></script>
 
 <script>
-// ========== AOS ==========
-AOS.init({ once: true, easing: 'ease-out-quint' });
+// ========== AOS (subtle fades only, editorial pace) ==========
+AOS.init({ once: true, easing: 'ease-out-quad', duration: 900 });
 
 // ========== TYPED.JS ==========
 new Typed('#typed-output', {
-  strings: ['Sugar & Co.', 'Azucar & Co.', 'Sugar & Co.'],
-  typeSpeed: 60, backSpeed: 35, backDelay: 2500,
-  startDelay: 600, loop: false, showCursor: true, cursorChar: '|'
+  strings: ['Sugar & Co.'],
+  typeSpeed: 80, startDelay: 1000,
+  showCursor: true, cursorChar: '|',
+  loop: false
 });
 
-// ========== VANTA ==========
-VANTA.FOG({
+// ========== VANTA BIRDS (hero -- light particles over photo) ==========
+VANTA.BIRDS({
   el: '#vanta-hero',
   mouseControls: true, touchControls: true,
   minHeight: 200, minWidth: 200,
-  highlightColor: 0x9B30FF,
-  midtoneColor: 0x1a0a2e,
-  lowlightColor: 0x0F0A1A,
-  baseColor: 0x0F0A1A,
-  blurFactor: 0.55, speed: 1.2, zoom: 1.3
+  backgroundColor: 0x000000,
+  color1: 0xC4956A, color2: 0xF2D5D0,
+  quantity: 3, birdSize: 1.2, wingSpan: 25,
+  speedLimit: 3, separation: 60, alignment: 40, cohesion: 30
 });
 
-VANTA.NET({
-  el: '#vanta-net',
-  mouseControls: true, touchControls: true,
-  minHeight: 80, minWidth: 200,
-  color: 0xE91E8B, backgroundColor: 0x0F0A1A,
-  points: 10, maxDistance: 20, spacing: 16, showDots: true
-});
-
-VANTA.WAVES({
-  el: '#vanta-cta',
+// ========== VANTA BIRDS (quote section -- different config) ==========
+VANTA.BIRDS({
+  el: '#vanta-quote',
   mouseControls: true, touchControls: true,
   minHeight: 200, minWidth: 200,
-  color: 0x1a0520, shininess: 50,
-  waveHeight: 12, waveSpeed: 0.7, zoom: 0.85
+  backgroundColor: 0x2C1810,
+  color1: 0xC4956A, color2: 0x8B6D5C,
+  quantity: 2, birdSize: 0.8, wingSpan: 20,
+  speedLimit: 2, separation: 80, alignment: 30, cohesion: 20
 });
 
-// ========== SCROLL PROGRESS ==========
+// ========== SCROLL RAIL (vertical side indicator) ==========
 window.addEventListener('scroll', () => {
   const p = (document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100;
-  document.getElementById('scrollProgress').style.width = p + '%';
+  document.getElementById('scrollFill').style.height = p + '%';
 });
 
 // ========== CUSTOM CURSOR ==========
@@ -705,10 +749,10 @@ if (window.innerWidth > 768) {
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   document.addEventListener('mousemove', (e) => {
-    dot.style.left = (e.clientX - 4) + 'px'; dot.style.top = (e.clientY - 4) + 'px';
-    ring.style.left = (e.clientX - 18) + 'px'; ring.style.top = (e.clientY - 18) + 'px';
+    dot.style.left = (e.clientX - 3) + 'px'; dot.style.top = (e.clientY - 3) + 'px';
+    ring.style.left = (e.clientX - 20) + 'px'; ring.style.top = (e.clientY - 20) + 'px';
   });
-  document.querySelectorAll('a, button, .candy-card, .candy-tag').forEach(el => {
+  document.querySelectorAll('a, button, .collection-card').forEach(el => {
     el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
     el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
   });
@@ -719,13 +763,13 @@ const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const el = entry.target, target = parseInt(el.dataset.target);
-    const start = performance.now(), dur = 1800;
+    const start = performance.now(), dur = 2000;
     const animate = (now) => {
       const p = Math.min((now - start) / dur, 1);
       const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.floor(eased * target);
+      el.textContent = Math.floor(eased * target).toLocaleString();
       if (p < 1) requestAnimationFrame(animate);
-      else el.textContent = target;
+      else el.textContent = target.toLocaleString();
     };
     requestAnimationFrame(animate);
     counterObserver.unobserve(el);
@@ -739,33 +783,33 @@ const videoObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) entry.target.play().catch(() => {});
     else entry.target.pause();
   });
-}, { threshold: 0.25 });
+}, { threshold: 0.2 });
 document.querySelectorAll('video').forEach(v => videoObserver.observe(v));
 
-// ========== CARD HOVER TILT ==========
-document.querySelectorAll('.candy-card').forEach(card => {
+// ========== CARD TILT (subtle) ==========
+document.querySelectorAll('.collection-card').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `perspective(600px) rotateY(${x * 5}deg) rotateX(${y * -3}deg) translateY(-8px)`;
+    card.style.transform = `perspective(800px) rotateY(${x * 4}deg) rotateX(${y * -3}deg) translateY(-6px)`;
   });
   card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) translateY(0)';
+    card.style.transform = '';
   });
 });
 
 // ========== MAGNETIC BUTTON ==========
 const btn = document.getElementById('magneticBtn');
 if (btn && window.innerWidth > 768) {
-  btn.parentElement.addEventListener('mousemove', (e) => {
+  btn.addEventListener('mousemove', (e) => {
     const rect = btn.getBoundingClientRect();
-    const dx = (e.clientX - rect.left - rect.width / 2) * 0.3;
-    const dy = (e.clientY - rect.top - rect.height / 2) * 0.3;
-    btn.style.transform = `translate(${dx}px, ${dy}px) scale(1.05)`;
+    const dx = (e.clientX - rect.left - rect.width / 2) * 0.25;
+    const dy = (e.clientY - rect.top - rect.height / 2) * 0.25;
+    btn.style.transform = `translate(${dx}px, ${dy}px)`;
   });
-  btn.parentElement.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0, 0) scale(1)';
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
   });
 }
 </script>
