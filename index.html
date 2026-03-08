@@ -51,6 +51,9 @@
     width: 0%;
     transition: width 0.1s linear;
   }
+  @media (max-width: 768px) {
+    .scroll-progress { height: 4px; }
+  }
 
   /* ========== CUSTOM CURSOR ========== */
   .cursor-dot {
@@ -499,6 +502,8 @@
     .video-interlude-content { padding: 1.5rem 2rem; }
     .stats-bar { grid-template-columns: 1fr; gap: 1.5rem; }
     .video-gallery { grid-template-columns: 1fr; }
+    .marquee { padding: 1.25rem 0; }
+    .marquee-inner span { font-size: 0.9rem; padding: 0 2rem; }
     .cta-content h2 { font-size: 1.75rem; }
     .vanta-divider { height: 120px; }
     .diagonal-slice::before, .wave-transition::before { height: 40px; top: -40px; }
@@ -871,6 +876,22 @@ document.querySelectorAll('[data-tilt]').forEach(card => {
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0)';
   });
+});
+
+// ========== VIDEO LAZY PLAY (mobile fix) ==========
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.isIntersecting) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  });
+}, { threshold: 0.25 });
+document.querySelectorAll('.video-gallery-item video, .video-interlude video').forEach(v => {
+  v.setAttribute('preload', 'metadata');
+  videoObserver.observe(v);
 });
 
 // ========== MAGNETIC BUTTON ==========
